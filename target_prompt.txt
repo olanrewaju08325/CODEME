@@ -1,0 +1,802 @@
+﻿<USER_REQUEST>
+This message combines two things: the outstanding V1 finalization items from before, and a new, important addition â€” a proper dynamic content management system. Please treat this as the full, current brief. Address every item directly and specifically; do not summarize broadly or claim things are "done" without confirming exactly how.
+
+=====================================================
+SECTION 1: V1 FINALIZATION â€” OUTSTANDING ITEMS
+=====================================================
+The items below were asked for previously. Some were silently skipped last time without any mention â€” do not do that again. If something isn't done, say so directly.
+
+A1. EMAIL VERIFICATION â€” REQUIRED
+Confirm directly: is email verification actually required before a student can access lessons? Test it yourself â€” sign up a fresh test account, do NOT verify the email, and confirm whether it's blocked from the Dashboard. Report the real result.
+
+A2. PAYMENT LOCK SECURITY TEST
+Actually attempt to break the retake-payment gate: try refreshing mid-flow, signing up a second account, and any other obvious exploit. Report exactly what you tried and whether any method let a student get extra exam attempts without admin approval.
+
+A3. QUIZ CONTENT â€” REAL OR PLACEHOLDER?
+Confirm directly: are the Module 1, 2, and 3 quizzes populated with my actual test questions from the course packs I wrote, or generic/placeholder ones? (See Section 2 below â€” this should be resolved as part of the new content system either way.)
+
+A4. STUDENT-VISIBLE GRADES/FEEDBACK
+Confirm directly: when a teacher grades a submission in the Project Grading Panel, does the student see that grade and feedback text on their own Assignment screen? Test this with a real submission and report the actual result.
+
+A5. Privacy consent checkbox at signup (one line, required before account creation) â€” confirm done or not done.
+
+A6. Supabase backup situation â€” plain-language answer on what happens if data is lost.
+
+B. PASSWORD RESET SECURITY MODEL
+Confirm exactly how the admin "Danger Zone" password reset works: does the admin TYPE A NEW password blind (correct, secure way), or can the admin ever VIEW a student's existing password in plaintext (a serious security problem)? If plaintext passwords are visible anywhere, fix this immediately.
+
+C. PERFORMANCE â€” REDUCE BUNDLE SIZE
+The production JS bundle was 726 KB â€” heavy for students on slow 3G/4G. Implement code-splitting/lazy-loading (Admin Panel, Forum, Certificate Generator loaded only when opened, not on initial load). Report the new bundle size after this change.
+
+D1. FILE/IMAGE STORAGE ARCHITECTURE
+Switch assignment file submissions and profile avatars from Base64-in-database to proper Supabase Storage (buckets), storing only the file URL in the database. Confirm this change and report any migration needed for existing test data.
+
+D2. SESSION PERSISTENCE
+Confirm students stay logged in across app restarts unless they explicitly log out.
+
+D3. PASSWORD STRENGTH VALIDATION
+Confirm a minimum password length (6-8 characters) is enforced at signup. Add it if missing.
+
+D4. SIGNUP SPAM PROTECTION
+Confirm basic protection exists against mass fake account creation (rate limiting, or required email verification as a natural deterrent).
+
+D5. AGE CONFIRMATION AT SIGNUP
+Add a required checkbox: "I confirm I am 13 years of age or older." Self-declaration only, no verification needed.
+
+D6. PUBLIC CERTIFICATE VERIFICATION PAGE
+Build a public, no-login page where anyone can enter a certificate's verification code and see: student name, course completed, issue date â€” confirming it's genuine.
+
+D7. FORUM MODERATION
+Add a manual admin delete/ban tool (confirm it exists) PLUS a lightweight filter that HOLDS a post for review if it contains obvious inappropriate words (does not auto-delete). Give admin a queue to approve/reject held posts.
+
+D8. REAL DEVICE / SLOW NETWORK TEST
+Report honestly: has this been tested on a real low-end Android device or throttled slow-network simulation, or only in the fast preview environment? Flag clearly if only tested in preview.
+
+=====================================================
+SECTION 2: DYNAMIC COURSE CONTENT MANAGEMENT SYSTEM (NEW â€” IMPORTANT)
+=====================================================
+This replaces any assumption that course structure is fixed or hardcoded. Build this properly, generalized, so it works for ANY course, with ANY number of modules or lessons â€” I should never need to ask you to hand-build a new course's structure again after this exists.
+
+E1. FULLY DYNAMIC STRUCTURE
+Courses, modules, lessons, projects, quizzes, and assignments must ALL be stored as data in the database, editable through the UI â€” not hardcoded in the app's code. A course can have any number of modules. A module can have any number of lessons. Do not assume or hardcode "6 modules" or any fixed count anywhere â€” the number of modules/lessons is whatever the admin or teacher creates, dynamically, through the interface.
+
+E2. WHO CAN EDIT WHAT
+- Admin: full create/edit/delete access to ALL courses, modules, lessons, projects, quizzes, and assignments, across the entire platform.
+- Teacher: create/edit/delete access, but ONLY for the specific course(s) they are assigned to teach (e.g. a teacher assigned to WD101 can edit WD101's content, but cannot see or touch CSS/JS/React content unless also assigned to those). This is a change from earlier â€” teachers are now allowed to manage content for their own assigned course(s), not just grade and post announcements.
+- Confirm this permission boundary is actually enforced (a teacher account should get a clear error/blocked view if they try to access another course's content editor via URL manipulation or any other route) â€” test this the same way the admin route and payment gate were tested.
+
+E3. CONTENT EDITOR REQUIREMENTS
+For each course, the admin/teacher should be able to, through the UI (no code, no manual SQL):
+- Create/reorder/delete Modules within a course
+- Create/reorder/delete Lessons within a module (title, text content, optional embedded YouTube video link)
+- Create/edit/delete a Project for a module (scenario text, instructions, optional sample solution)
+- Create/edit/delete a Module Test (add/remove/reorder questions â€” multiple choice, true/false, short answer â€” with correct answers marked)
+- Create/edit/delete an Assignment for a module (instructions, due date if applicable)
+- Publish/unpublish a module (so incomplete content isn't visible to students while being written)
+
+E4. APPLY THIS TO ALL EXISTING COURSES NOW
+Using this new system, properly enter my real, actual content for WD101 (all 6 modules, using my real lessons, real project scenarios, and real test questions from the course packs I've already written and shared) â€” replacing any hardcoded or placeholder version currently in the app. All other courses (CSS, JavaScript, React, Git & GitHub, Backend, Full Stack, Data Analytics, Data Science) should exist as course entries with zero modules yet, marked "Coming Soon," ready for content to be added later through this same editor â€” by me or a teacher â€” without needing you to build anything further.
+
+=====================================================
+SECTION 3: NO MOCK DATA â€” ANYWHERE
+=====================================================
+F1. Remove all placeholder, mock, sample, or "lorem ipsum"-style data from the entire app â€” quizzes, lessons, forum posts, leaderboard entries, badges, student records, everything. Every piece of content visible in the app should be either real content I've provided, or a genuinely empty state (e.g. "No forum posts yet" rather than fake sample posts).
+
+F2. Confirm directly which parts of the app, if any, currently still contain mock/placeholder/sample data, and confirm each one has been replaced or cleared.
+
+=====================================================
+WHAT I NEED BACK
+=====================================================
+Go through Section 1 (A1â€“A6, B, C, D1â€“D8), Section 2 (E1â€“E4), and Section 3 (F1â€“F2) one at a time. For each: confirmed already done, confirmed fixed just now, or confirmed not done with exactly what you need from me. Do not skip or bundle multiple items into a vague summary â€” I need a specific answer for every lettered/numbered item. do all and tell me the next features needed the admin and teachers can manipulate contents you know the courses we off3er frontend backend fullstack data analytics data science all like datcamp all sandbox very good functional CodeMe Academy 
+Learn.  Build.  Innovate. 
+WD101: Web Dev 101 â€” HTML 
+Course Dates: June 21 â€“ July 21, 2026 
+Class Days: Sundays, saturdays & Thursdays Â· 8:30 PM 
+Instructor-Led Course Pack 
+CodeMe Academy Â· WD101 
+CodeMe Academy Â· Learn. Build. Innovate.  â€”  Page 2 
+Table of Contents 
+Table of Contents .......................................................................................................................................... 2 
+Navigating Through the Course .................................................................................................................... 4 
+How the Course Works ............................................................................................................................. 4 
+Course Overview ....................................................................................................................................... 4 
+How to Move Through the Course Effectively .......................................................................................... 5 
+Course Schedule â€” June 21 to July 15, 2026 ................................................................................................ 6 
+Module 1: Getting Started with HTML .......................................................................................................... 7 
+Lesson 1: A Brief History of HTML ............................................................................................................. 7 
+Lesson 2: Setting Up Your HTML Development Environment .................................................................. 7 
+Step 1: Install a Code Editor .................................................................................................................. 7 
+Step 2: Confirm You Have a Web Browser............................................................................................ 7 
+Step 3: Create Your Project Folder ........................................................................................................ 7 
+Step 4: Create Your First HTML File ...................................................................................................... 8 
+Step 5: View Your Page in the Browser ................................................................................................. 8 
+Optional: Live Server Extension ............................................................................................................ 8 
+Lesson 3: Understanding Character Encoding .......................................................................................... 8 
+Lesson 4: HTML Syntax Essentials ............................................................................................................. 9 
+The DOCTYPE Declaration ..................................................................................................................... 9 
+Tags vs. Elements .................................................................................................................................. 9 
+Block vs. Inline Elements ....................................................................................................................... 9 
+Comments ............................................................................................................................................. 9 
+Lesson 5: Document Structure â€” html, head, and body .......................................................................... 9 
+<head> â€” Hidden Setup Info ................................................................................................................ 9 
+<body> â€” What Visitors Actually See ................................................................................................. 10 
+Lesson 6: How HTML, CSS, and JavaScript Work Together ..................................................................... 10 
+Lesson 7: Attributes and Values .............................................................................................................. 10 
+Global vs. Element-Specific Attributes ................................................................................................ 11 
+Lesson 8: HTML in the Age of AI ............................................................................................................. 11 
+Module 1 Wrap-Up ................................................................................................................................. 11 
+Module 1 Project: Designing a Simple Page for a Flower Shop .............................................................. 12 
+Module 1 Test ......................................................................................................................................... 14 
+Module 1 Assignment: Build Your Own â€œAbout Meâ€ Page ..................................................................... 15 
+Module 2: Formatting Text and Organizing Data ....................................................................................... 16 
+CodeMe Academy Â· WD101 
+CodeMe Academy Â· Learn. Build. Innovate.  â€”  Page 3 
+What We'll Cover in This Module ........................................................................................................... 16 
+Lesson 1: Headings and Page Structure .................................................................................................. 16 
+Lesson 2: Paragraphs and Inline Text Formatting ................................................................................... 16 
+Lesson 3: Quotations â€” q, blockquote, cite, and footer ........................................................................ 17 
+Lesson 4: Line Breaks and Horizontal Rules ............................................................................................ 17 
+Lesson 5: Computer Code and Preformatted Text ................................................................................. 17 
+Lesson 6: HTML Lists ............................................................................................................................... 18 
+Lesson 7: Tables for Structured Data ...................................................................................................... 18 
+Lesson 8: Semantic Markup, Accessibility & SEO.................................................................................... 19 
+Lesson 9: Best Practices for Content Layout ........................................................................................... 19 
+Module 2 Wrap-Up ................................................................................................................................. 19 
+Module 2 Project: HTML Lists â€” Organizing Content Efficiently............................................................ 21 
+Module 2 Test ......................................................................................................................................... 23 
+Module 2 Assignment: Crafting a Tech Blog Post ................................................................................... 24 
+ 
+  
+Navigating Through the Course 
+CodeMe Academy Â· WD101 
+Welcome to WD101: Web Dev 101 â€” HTML, brought to you by CodeMe Academy. This course walks 
+you through the foundations of HTML and beginner-level web development, one step at a time. 
+You'll begin by learning how HTML works under the hood, then move into formatting text, organizing 
+content, adding media and forms, improving how pages look, supporting accessibility, and finally 
+exploring a few extra HTML features that go beyond the basics. 
+To keep things manageable, the course is broken into modules, lessons, projects, and tests. Each new 
+topic builds on the one before it, so you can grow your skills steadily and with confidence. 
+How the Course Works 
+This course blends theory with hands-on practice. As you move through each module, you'll learn a 
+concept, see it in action, and check your understanding before moving on. Here's what to expect: 
+â€¢ Modules â€” six structured modules, each covering a major area of HTML and web page building. 
+â€¢ Lessons â€” short, focused lessons that introduce one idea at a time. 
+â€¢ Study Material â€” explanations, real code examples, and practical tips. 
+â€¢ Projects â€” hands-on tasks that put each module's lessons into practice. 
+â€¢ Module Tests â€” a short check at the end of each module before moving on. 
+â€¢ Assignments â€” take-home tasks that reinforce what you covered in class. 
+â€¢ Final Project & Final Test â€” at the end of the course, everything comes together in one larger 
+project and assessment. 
+Course Overview 
+Module 
+What You'll Learn 
+1. Getting Started with HTML 
+Web dev fundamentals, setting up your environment, character 
+encoding, HTML structure & syntax, attributes, comments, the 
+DOM, and how HTML, CSS & JS work together. 
+2. Formatting Text & Organizing 
+Data 
+Headings, paragraphs, text formatting, lists, and tables â€” plus 
+why semantic markup matters for accessibility, readability, and 
+SEO. 
+3. Visual & Interactive Elements 
+Images, hyperlinks, audio, video, and forms â€” using input 
+elements and attributes to support user interaction. 
+4. Enhancing Web Presentation 
+Basic styling techniques, global/event/data attributes, and 
+structuring documents for usability. 
+5. Optimized & Accessible Web 
+Content 
+Semantic markup, microformats, microdata, WCAG principles, 
+and ARIA roles/states/properties. 
+6. HTML Beyond Basics 
+Favicons, iframes, HTML entities, emojis, image maps, HTML APIs, 
+and HTML graphics. 
+CodeMe Academy Â· Learn. Build. Innovate.  â€”  Page 4 
+How to Move Through the Course Effectively 
+CodeMe Academy Â· WD101 
+Work through the modules in order â€” each one builds on the last: 
+1. Start with the foundations of HTML and web development. 
+2. Learn to format text and organize information. 
+3. Add visuals, media, links, and forms. 
+4. Improve how your pages look and feel. 
+5. Build content that's accessible and optimized for search engines. 
+6. Finish by exploring extra HTML features. 
+Type out every code example yourself instead of copying and pasting â€” your fingers learn the syntax 
+faster than your eyes do. Don't skip the projects, tests, and assignments; they're what make the lessons 
+stick. 
+CodeMe Academy Â· Learn. Build. Innovate.  â€”  Page 5 
+Course Schedule â€” June 21 to July 21, 2026 
+CodeMe Academy Â· WD101 
+Classes meet three times a week â€” Sundays, Tuesdays, and Thursdays at 8:30 AM. Below is the session
+by-session plan. Detailed lesson material for Modules 3â€“6 will be added to this pack as the course 
+progresses; the topics below give you a roadmap for now. 
+CodeMe Academy Â· Learn. Build. Innovate.  â€”  Page 6 
+Module 1: Getting Started with HTML 
+CodeMe Academy Â· WD101 
+This module covers everything you need to start writing real HTML: how the language came to be, how 
+to set up your tools, how computers read text, the rules of HTML syntax, the core document structure, 
+and how HTML fits alongside CSS and JavaScript. 
+Lesson 1: A Brief History of HTML 
+HTML wasn't always the polished language we use today. It began in 1989 at CERN, where Sir Tim 
+Berners-Lee needed an easier way for scientists to share research across different computers. His 
+solution became HyperText Markup Language â€” HTML. 
+The very first web page was nothing fancy: plain text and a few hyperlinks. But that simple page changed 
+everything, laying the groundwork for how we share and access information today. 
+HTML 1.0 arrived in 1993 with only a handful of basic elements. From there, the language kept growing: 
+â€¢ HTML 2 (1995) â€” added tables and images. 
+â€¢ HTML 3 & 4 (1997) â€” introduced frames, style sheets, and support for scripting. 
+â€¢ HTML5 (2014) â€” brought native audio/video, semantic elements, and smarter forms. 
+Two organizations keep HTML consistent across the web: the W3C (World Wide Web Consortium) and 
+WHATWG (Web Hypertext Application Technology Working Group). Together they maintain HTML as a 
+â€œliving standardâ€ â€” it keeps evolving rather than freezing at one version. 
+Why this matters to you: HTML standards are what make a website look right whether someone opens 
+it on a laptop, a tablet, or a phone. 
+Lesson 2: Setting Up Your HTML Development Environment 
+HTML doesn't need to be â€œinstalledâ€ like a program â€” you only need two things: a text editor to write 
+your code, and a web browser to see it rendered. 
+Step 1: Install a Code Editor 
+We recommend Visual Studio Code (VS Code) â€” free, beginner-friendly, and used by professional 
+developers worldwide. 
+â€¢ Go to code.visualstudio.com 
+â€¢ Download the version for your operating system (Windows / Mac / Linux) 
+â€¢ Run the installer and accept the default settings 
+Step 2: Confirm You Have a Web Browser 
+Chrome, Firefox, or Edge will all display your pages correctly. Chrome is recommended for this course 
+because of its built-in developer tools, which we'll use later. 
+Step 3: Create Your Project Folder 
+1. On your Desktop, create a folder called WD101-Projects. 
+2. Inside it, create a folder called Module-1. 
+CodeMe Academy Â· Learn. Build. Innovate.  â€”  Page 7 
+3. This is where today's and future files will live. 
+CodeMe Academy Â· WD101 
+Step 4: Create Your First HTML File 
+1. Open VS Code and click File â†’ Open Folder, then select Module-1. 
+2. Click File â†’ New File and name it exactly: index.html 
+3. Type in the starter code below. 
+4. Save the file (Ctrl+S on Windows, Cmd+S on Mac). 
+<!DOCTYPE html> 
+<html> 
+<head> 
+<title>My First Page</title> 
+</head> 
+<body> 
+<h1>Hello, World!</h1> 
+<p>This is my very first HTML page.</p> 
+</body> 
+</html> 
+Step 5: View Your Page in the Browser 
+Find index.html in your folder and double-click it (or right-click â†’ Open With â†’ choose your browser). 
+You should see â€œHello, World!â€ as a heading with your sentence below it. 
+Optional: Live Server Extension 
+Lets your browser auto-refresh every time you save a change. In VS Code, open the Extensions panel, 
+search â€œLive Serverâ€ (by Ritwick Dey), install it, then right-click index.html and choose â€œOpen with Live 
+Server.â€ 
+Lesson 3: Understanding Character Encoding 
+Computers don't understand letters â€” they understand electrical signals, represented as 1s and 0s 
+(bits). Character encoding is the system that maps each letter, number, or symbol to a number a 
+computer can store and display. 
+In binary, every digit represents a power of 2. So the binary number 1011 breaks down as: (1Ã—2Â³) + 
+(0Ã—2Â²) + (1Ã—2Â¹) + (1Ã—2â°) = 8 + 0 + 2 + 1 = 11. 
+You'll also meet hexadecimal (base 16) when working with colors and special characters later in the 
+course. In hex, 2F equals (2Ã—16) + 15 = 47 in decimal. 
+For text encoding specifically, three standards matter most: 
+â€¢ ASCII â€” the original standard, limited to 128 English characters. 
+â€¢ Unicode â€” supports virtually every character from every language. 
+â€¢ UTF-8 â€” the most practical Unicode encoding; backward-compatible with ASCII and the default 
+for HTML5. 
+To tell the browser which encoding you're using, add this inside your <head>: 
+<meta charset="UTF-8"> 
+CodeMe Academy Â· Learn. Build. Innovate.  â€”  Page 8 
+Stick with UTF-8 for every project in this course â€” it just works. 
+CodeMe Academy Â· WD101 
+Practice 
+â€¢ Convert to decimal: 1101, 100101, 11111111 
+â€¢ Convert to decimal: 4A, FF, 1B7 (hexadecimal) 
+Lesson 4: HTML Syntax Essentials 
+Just like English has grammar rules, HTML has syntax rules â€” the correct way to write tags, attributes, 
+and values so browsers can understand your code. 
+The DOCTYPE Declaration 
+Every HTML5 document starts with one line that tells the browser which version of HTML to expect. It 
+must be the very first line in your file: 
+<!DOCTYPE html> 
+Tags vs. Elements 
+A tag is a marker â€” written in angle brackets â€” that opens or closes a piece of content: <p> opens, </p> 
+closes. An element is the whole package: opening tag + content + closing tag. 
+Some elements don't wrap content at all, so they skip the closing tag entirely. These are called self
+closing (void) elements, like: 
+<img src="image.jpg" alt="Description"> 
+Block vs. Inline Elements 
+â€¢ Block-level elements take up the full width of the page and start on a new line â€” e.g. <h1>, <p>, 
+<ul>, <div>. 
+â€¢ Inline elements only take up as much space as their content needs and sit within a line â€” e.g. 
+<a>, <img>, <span>. 
+Comments 
+Use comments to leave yourself notes, or to temporarily disable a section without deleting it: 
+<!-- This is a comment --> 
+Comments never display on the page, but they ARE visible in the page's source code â€” including to 
+search engines. Never hide sensitive information in a comment. 
+Lesson 5: Document Structure â€” html, head, and body 
+Every HTML page is built around three core tags: <html>, <head>, and <body>. 
+<html> wraps the entire document â€” it's the first tag after the DOCTYPE and the last tag in the file. 
+<head> â€” Hidden Setup Info 
+The head doesn't display anything on the page. Instead, it tells the browser (and search engines) about 
+the page: its title, description, stylesheet, character encoding, and more. 
+CodeMe Academy Â· Learn. Build. Innovate.  â€”  Page 9 
+CodeMe Academy Â· WD101 
+<head> 
+<title>My Web Page</title> 
+<meta name="description" content="A short summary of this page"> 
+<link rel="stylesheet" href="styles.css"> 
+<meta charset="UTF-8"> 
+</head> 
+<body> â€” What Visitors Actually See 
+Everything inside <body> is visible content: headings, paragraphs, images, videos, links, lists, tables, and 
+forms. 
+<body> 
+<h1>Welcome</h1> 
+<p>This is my web page.</p> 
+<img src="photo.jpg" alt="A photo"> 
+</body> 
+The head sets the stage; the body performs the show. 
+Lesson 6: How HTML, CSS, and JavaScript Work Together 
+Three technologies team up to build the websites you use every day: 
+â€¢ HTML â€” structure and content 
+â€¢ CSS â€” presentation: layout, color, fonts 
+â€¢ JavaScript â€” interactivity and behavior 
+One key concept here is the DOM (Document Object Model). When a browser loads a page, it builds a 
+tree-like map of every element on it. JavaScript can then use this map to add, remove, or change 
+content live, without reloading the page. 
+This simple page: 
+<html> 
+<head><title>My Page</title></head> 
+<body> 
+<h1>Heading</h1> 
+<p>Some text</p> 
+</body> 
+</html> 
+...becomes this tree in the DOM: 
+document 
+html 
+head 
+title 
+body 
+h1 
+p 
+Once you start learning JavaScript later on, the DOM is what lets your code reach into a page and 
+change it on the fly. 
+Lesson 7: Attributes and Values 
+CodeMe Academy Â· Learn. Build. Innovate.  â€”  Page 10 
+CodeMe Academy Â· WD101 
+Attributes add extra detail to an HTML element â€” they live inside the opening tag, written as 
+name="value" pairs. 
+The <img> tag relies on attributes to do anything useful at all: 
+<img src="image.jpg" alt="A detached house"> 
+Here, src points to the image file, and alt provides a text description â€” important for accessibility and 
+for when the image fails to load. 
+Global vs. Element-Specific Attributes 
+â€¢ Global attributes work on almost any element â€” id, class, style, and title are common examples. 
+â€¢ Element-specific attributes only apply to particular tags â€” href only makes sense on <a>, src 
+only makes sense on <img> or media elements, and type only makes sense on <input>. 
+Knowing which attributes belong where is part of writing clean, valid HTML. 
+Lesson 8: HTML in the Age of AI 
+AI tools can now generate web pages in seconds. So why bother learning HTML by hand? 
+Because a calculator can solve an equation, but you still need to understand math to know if the answer 
+makes sense. The same logic applies here: AI can write HTML, but understanding HTML is what lets you 
+check its work, fix its mistakes, and ask it for exactly what you need. 
+Without a foundation in HTML, it's hard to: 
+â€¢ spot errors in AI-generated code 
+â€¢ understand what generated code is actually doing 
+â€¢ customize or improve the result 
+â€¢ communicate clearly with developers and designers 
+Strong fundamentals don't just help you today â€” they make every future skill (CSS, JavaScript, 
+accessibility, and whatever comes next) easier to pick up. AI is a tool you'll use throughout your career. 
+This course makes sure you're the one in control of it, not the other way around. 
+Module 1 Wrap-Up 
+You've covered a lot of ground! You now understand how HTML documents are structured, how 
+comments work, and how elements, tags, and attributes come together to build a web page. Time to 
+put it into practice. 
+CodeMe Academy Â· Learn. Build. Innovate.  â€”  Page 11 
+Module 1 Project: Designing a Simple Page for a Flower Shop 
+CodeMe Academy Â· WD101 
+Scenario 
+Bloom & Petal Haven, a neighborhood flower and plant shop, wants to bring two of its bestselling indoor 
+plants online: the Peace Lily and the Zanzibar Gem. Your task is to build a clean, simple webpage 
+introducing both plants with a short description, a price, and a photo. 
+Instructions 
+1. Create a new HTML file named index.html. 
+2. Start with the DOCTYPE declaration for HTML5, and wrap your entire page in <html> tags. 
+3. Build the <head> section: set the page <title> to "Indoor Plants". 
+4. Add a <meta> description with name="description" and content="Explore a variety of indoor 
+plants for your home or office." 
+5. Set the character encoding to UTF-8 using <meta charset="UTF-8">. 
+6. In the <body>, add an <h1> titled "Indoor Plants". 
+7. Add an <h2> for "Peace Lily", followed by a <p> description ("The Peace Lily, known for its 
+elegant white flowers, is a popular choice for indoor spaces.") and a <p> with the price ("Price: 
+$15"), then an <img> with src and alt attributes. 
+8. Repeat the same pattern for "Zanzibar Gem" â€” description: "The Zanzibar Gem, with its glossy 
+green foliage, is a low-maintenance indoor plant perfect for beginners."; price: "Price: $20". 
+9. Save your file and open it in your browser to check that everything displays correctly. 
+10. Optional: experiment by adding extra plants or details once the core page works. 
+Sample Solution 
+Try the project yourself first â€” struggling a little is part of learning. Compare your work against this once 
+you're done: 
+<!DOCTYPE html> 
+<html> 
+<head> 
+<title>Indoor Plants</title> 
+<meta name="description" content="Explore a variety of indoor plants for your home or 
+office."> 
+<meta charset="UTF-8"> 
+</head> 
+<body> 
+<h1>Indoor Plants</h1> 
+<h2>Peace Lily</h2> 
+<p>The Peace Lily, known for its elegant white flowers, is a popular choice for indoor 
+spaces.</p> 
+<p>Price: $15</p> 
+<img src="/uploads/media/default/0001/04/spathiphyllum-peace-lily.jpg" alt="Peace 
+Lily"> 
+<h2>Zanzibar Gem</h2> 
+<p>The Zanzibar Gem, with its glossy green foliage, is a low-maintenance indoor plant 
+perfect for beginners.</p> 
+<p>Price: $20</p> 
+CodeMe Academy Â· Learn. Build. Innovate.  â€”  Page 12 
+CodeMe Academy Â· WD101 
+<img src="/uploads/media/default/0001/04/zamioculcas-zanzibar-gem.jpg" alt="Zanzibar 
+Gem"> 
+</body> 
+</html> 
+CodeMe Academy Â· Learn. Build. Innovate.  â€”  Page 13 
+Module 1 Test 
+CodeMe Academy Â· WD101 
+15 questions. Mix of multiple choice, true/false, and short answer. 
+1. What does HTML stand for?    a) HyperText Markup Language   b) HighText Machine Language   
+c) HyperText Modern Language   d) Home Tool Markup Language 
+2. In what year was HTML first created, and at which organization? 
+3. Which line must always appear as the very first line of an HTML5 document?    a) <html>   b) 
+<!DOCTYPE html>   c) <head>   d) <title> 
+4. True or False: The <head> section is visible to website visitors. 
+5. Which character encoding is recommended for modern HTML5 documents?    a) ASCII   b) UTF-8   
+c) UTF-32   d) Hex 
+6. Convert the binary number 1101 to decimal. 
+7. Which of these is a block-level element?    a) <span>   b) <a>   c) <p>   d) <img> 
+8. Which attribute provides alternative text for an image?    a) src   b) alt   c) title   d) href 
+9. True or False: Global attributes like id and class can be used on almost any HTML element. 
+10. Name the two organizations responsible for maintaining HTML standards. 
+11. What does the DOM represent?    a) A CSS file   b) A tree-like structure of a webpage's elements   
+c) An image format   d) A JavaScript library 
+12. Fill in the blank: the ____ tag is self-closing and is used to insert images. 
+13. Which of these correctly writes an HTML comment?    a) // comment   b) /* comment */   c) <!-- 
+comment -->   d) # comment 
+14. What's the difference between an element and a tag? 
+15. According to this course, why does learning HTML still matter in the age of AI?    a) AI cannot 
+generate HTML at all   b) Understanding HTML helps you evaluate, fix, and customize AI
+generated code   c) HTML is being replaced by AI   d) None of the above 
+CodeMe Academy Â· Learn. Build. Innovate.  â€”  Page 14 
+Module 1 Assignment: Build Your Own â€œAbout Meâ€ Page 
+CodeMe Academy Â· WD101 
+Due before our next class (Session 6, July 2). This is independent practice â€” apply what you learned in 
+the Flower Shop project to a page about yourself. 
+Instructions 
+1. Create a new file named about-me.html. 
+2. Start with <!DOCTYPE html> and wrap everything in <html> tags. 
+3. In the <head>: set a <title> with your name, add a <meta name="description"> with a one
+sentence summary of yourself, and set the charset to UTF-8. 
+4. In the <body>: add an <h1> with your name. 
+5. Add an <h2> titled "About Me" followed by a <p> with 2â€“3 sentences about yourself. 
+6. Add an <h2> titled "My Hobbies" followed by a <p> listing a few of your hobbies. 
+7. Add an <img> tag with a photo (or a placeholder image) and meaningful alt text. 
+8. Save the file and open it in your browser to confirm everything displays correctly. 
+9. Submit by sharing your .html file in the class WhatsApp group. 
+CodeMe Academy Â· Learn. Build. Innovate.  â€”  Page 15 
+Module 2: Formatting Text and Organizing Data 
+CodeMe Academy Â· WD101 
+In Module 1, you learned how HTML documents are structured. Now it's time to focus on presenting 
+information clearly and professionally â€” using headings, paragraphs, lists, tables, and text formatting to 
+turn plain information into content that's easy to read, navigate, and use. 
+You'll also start thinking like a professional web builder, learning why semantic structure matters for 
+accessibility, usability, and search engines. 
+What We'll Cover in This Module 
+â€¢ Headings and page structure 
+â€¢ Paragraphs and inline text formatting 
+â€¢ Quotations, line breaks, and horizontal rules 
+â€¢ Computer code and preformatted text 
+â€¢ Lists for organized information 
+â€¢ Tables for structured data 
+â€¢ Semantic markup, accessibility, and SEO 
+â€¢ Best practices for content layout 
+Many beginners think web development is mostly about colors and design. In reality, good websites 
+start with clear content structure â€” if visitors can't quickly understand a page, even a beautiful design 
+will struggle. 
+Lesson 1: Headings and Page Structure 
+Headings define the title or sections of a page, and give it hierarchy. There are six levels, from <h1> 
+(most important) to <h6> (least important). 
+Headings matter for two big reasons: 
+â€¢ Accessibility â€” they help visitors and screen readers understand a page's structure. 
+â€¢ SEO â€” search engines use headings to figure out what a page is about and how to rank it. 
+Use headings to describe content, not just to make text bigger. Don't skip levels â€” for example, don't 
+jump from <h1> straight to <h3> without an <h2> in between; that's confusing for users and search 
+engines alike. 
+Default heading sizes (these can be changed later with CSS, but it's worth knowing the defaults): 
+â€¢ <h1>: 32px   <h2>: 24px   <h3>: 18px 
+â€¢ <h4>: 16px   <h5>: 14px   <h6>: 12px 
+Lesson 2: Paragraphs and Inline Text Formatting 
+Paragraphs are created with the <p> tag â€” a block-level element with space above and below. 
+<p>Hello, World!</p> 
+Inside a paragraph, several inline tags let you format specific words or phrases: 
+CodeMe Academy Â· Learn. Build. Innovate.  â€”  Page 16 
+â€¢ <strong> â€” bold, marking importance 
+CodeMe Academy Â· WD101 
+â€¢ <em> â€” italic, adding emphasis 
+â€¢ <u> â€” underline 
+â€¢ <sup> / <sub> â€” superscript / subscript (e.g. 1st, or H2O) 
+â€¢ <del> â€” strikethrough, for removed or outdated text 
+â€¢ <mark> â€” highlight, for drawing attention to text 
+<p>This is some <strong>important</strong> text.</p> 
+<p>The chemical formula for water is H<sub>2</sub>O.</p> 
+<p>Special Price: <del>$100</del> $75.</p> 
+<p>The deadline is <mark>Monday, March 12th</mark>.</p> 
+Lesson 3: Quotations â€” q, blockquote, cite, and footer 
+Use <q> for short, inline quotes â€” browsers usually wrap them in quotation marks automatically: 
+<p><q>The only way to do great work is to love what you do.</q> - Steve Jobs</p> 
+Use <blockquote> for longer, block-level quotes: 
+<blockquote> 
+<p>Imagination is more important than knowledge.</p> 
+</blockquote> 
+Use <cite> to mark the title of a book, film, or other creative work, or to credit a source: 
+<p>I recently read <cite>The Great Gatsby</cite> by F. Scott Fitzgerald.</p> 
+You can add a cite attribute to <q> to link to the quote's source â€” useful mainly for screen readers, 
+since it has no visible effect by default: 
+<q cite="https://example.com/source">Innovation distinguishes a leader from a 
+follower.</q> 
+Use <footer> inside a <blockquote> to add attribution: 
+<blockquote> 
+<p>The more that you read, the more things you will know.</p> 
+<footer>- Dr. Seuss</footer> 
+</blockquote> 
+Lesson 4: Line Breaks and Horizontal Rules 
+<br> inserts a line break within a block of text â€” handy for poetry, addresses, or short lists of lines. It's 
+self-closing. 
+<p>This is the first line.<br>This is the second line.</p> 
+<hr> draws a horizontal line, typically used to visually separate sections of content. It's also self-closing. 
+<p>This is some text above the line.</p> 
+<hr> 
+<p>This is some text below the line.</p> 
+Lesson 5: Computer Code and Preformatted Text 
+CodeMe Academy Â· Learn. Build. Innovate.  â€”  Page 17 
+CodeMe Academy Â· WD101 
+CodeMe Academy Â· Learn. Build. Innovate.  â€”  Page 18 
+<code> displays a short snippet of code inline, in a monospaced font: 
+<p>Set the variable with <code>var x = 0;</code></p> 
+<pre> preserves all whitespace and line breaks exactly as typed â€” ideal for blocks of code or song lyrics: 
+<pre>Hello, World! 
+What a sight to see, 
+A vast and endless web, 
+Connecting you and me.</pre> 
+<kbd> represents keyboard input, and <samp> represents sample program output: 
+<p>Press <kbd>Ctrl + S</kbd> to save.</p> 
+<p><samp>Invalid username or password.</samp></p> 
+Lesson 6: HTML Lists 
+There are three types of lists in HTML: 
+â€¢ Unordered lists (<ul>) â€” items with no particular order, each wrapped in <li>. 
+â€¢ Ordered lists (<ol>) â€” items in a specific sequence, each wrapped in <li>. 
+â€¢ Definition lists (<dl>) â€” terms (<dt>) paired with definitions (<dd>). 
+<ul> 
+  <li>Item 1</li> 
+  <li>Item 2</li> 
+</ul> 
+  
+<ol> 
+  <li>First item</li> 
+  <li>Second item</li> 
+</ol> 
+  
+<dl> 
+  <dt>Term</dt> 
+  <dd>Definition</dd> 
+</dl> 
+You can nest a list inside a single <li> to build a hierarchy â€” for example, listing sub-items under a main 
+step: 
+<ul> 
+  <li>First item</li> 
+  <li>Second item 
+    <ul> 
+      <li>Sub-item 1</li> 
+      <li>Sub-item 2</li> 
+    </ul> 
+  </li> 
+</ul> 
+Lesson 7: Tables for Structured Data 
+Tables are for one thing: structured rows and columns of data â€” schedules, pricing, comparison charts. 
+They aren't meant for general page layout; that job belongs to CSS. 
+A table is built from <table>, <tr> (row), <th> (header cell), and <td> (data cell): 
+CodeMe Academy Â· WD101 
+<table> 
+<tr> 
+<th>Plant</th> 
+<th>Price</th> 
+</tr> 
+<tr> 
+<td>Peace Lily</td> 
+<td>$15</td> 
+</tr> 
+</table> 
+You can add a <caption> above a table to describe its contents, and group rows with <thead>, <tbody>, 
+and <tfoot> in larger tables. Keep tables for tabular data only â€” screen readers and search engines 
+expect tables to contain real data, not page structure. 
+Lesson 8: Semantic Markup, Accessibility & SEO 
+â€œSemanticâ€ means choosing tags based on what the content IS, not just how you want it to look. 
+Compare a generic <div>Latest News</div> to a proper <h2>Latest News</h2> â€” visually similar with 
+no styling, but the <h2> clearly tells a screen reader or search engine â€œthis is a heading.â€ The <div> says 
+nothing at all. 
+Why this matters: 
+â€¢ Accessibility â€” screen reader users rely on semantic tags (headings, lists, tables) to understand 
+and navigate a page. 
+â€¢ SEO â€” search engines use your structure to figure out what a page is about and how to rank it. 
+â€¢ Maintainability â€” other developers (including future you) can read semantic code faster than a 
+page built entirely from generic <div> tags. 
+Rule of thumb: always reach for the most specific, meaningful tag available before falling back to a 
+generic one. 
+Lesson 9: Best Practices for Content Layout 
+A page can use perfect HTML and still be hard to read if the content itself is disorganized. A few habits 
+that make text-heavy pages easier to scan: 
+â€¢ Use exactly one <h1> per page â€” your main title. 
+â€¢ Don't skip heading levels. 
+â€¢ Keep paragraphs short â€” a few sentences, not a wall of text. 
+â€¢ Use lists wherever you're presenting steps, features, or options. 
+â€¢ Break long sections with sub-headings so readers can jump to what they need. 
+â€¢ Leave breathing room â€” don't cram every line break and rule into one tiny space. 
+Module 2 Wrap-Up 
+CodeMe Academy Â· Learn. Build. Innovate.  â€”  Page 19 
+CodeMe Academy Â· WD101 
+You can now format text, build lists and tables, and explain why semantic markup matters for 
+accessibility and SEO. Time for two projects that put it all together. 
+CodeMe Academy Â· Learn. Build. Innovate.  â€”  Page 20 
+CodeMe Academy Â· WD101 
+CodeMe Academy Â· Learn. Build. Innovate.  â€”  Page 21 
+Module 2 Project: HTML Lists â€” Organizing Content Efficiently 
+Scenario 
+You're helping build a content section for an educational website aimed at children. Your task is to 
+organize different types of content using HTML lists â€” a section on animals, and a section on solar 
+system planets ordered by distance from the sun. 
+Instructions 
+1. Begin with the basic HTML5 structure: doctype, html, head, and body tags. 
+2. Create an unordered list (<ul>) of animal types: mammals, birds, and reptiles. 
+3. Create an ordered list (<ol>) of the planets, from closest to the sun to furthest. 
+4. Create a definition list (<dl>) explaining the terms "Ecosystem" and "Orbit." 
+5. Nest a small unordered list inside the planets list to show moons for Earth and Mars only. 
+Sample Solution 
+<!DOCTYPE html> 
+<html> 
+<head> 
+  <title>Learning About Nature</title> 
+  <meta charset="UTF-8"> 
+</head> 
+<body> 
+  <h1>Animal Types</h1> 
+  <ul> 
+    <li>Mammals</li> 
+    <li>Birds</li> 
+    <li>Reptiles</li> 
+  </ul> 
+  
+  <h1>Planets of the Solar System</h1> 
+  <ol> 
+    <li>Mercury</li> 
+    <li>Venus</li> 
+    <li>Earth 
+      <ul> 
+        <li>Moon</li> 
+      </ul> 
+    </li> 
+    <li>Mars 
+      <ul> 
+        <li>Phobos</li> 
+        <li>Deimos</li> 
+      </ul> 
+    </li> 
+    <li>Jupiter</li> 
+    <li>Saturn</li> 
+    <li>Uranus</li> 
+    <li>Neptune</li> 
+  </ol> 
+  
+  <h1>Science Terms</h1> 
+  <dl> 
+    <dt>Ecosystem</dt> 
+CodeMe Academy Â· WD101 
+<dd>A community of living organisms interacting with their environment.</dd> 
+<dt>Orbit</dt> 
+<dd>The curved path an object in space follows around another object.</dd> 
+</dl> 
+</body> 
+</html> 
+CodeMe Academy Â· Learn. Build. Innovate.  â€”  Page 22 
+Module 2 Test 
+CodeMe Academy Â· WD101 
+12 questions. Mix of multiple choice, true/false, and short answer. 
+1. Which tag is used for short, inline quotations?    a) <blockquote>   b) <q>   c) <cite>   d) <quote> 
+2. Which tag is best for a longer, multi-sentence quotation?    a) <q>   b) <blockquote>   c) <span>   
+d) <mark> 
+3. True or False: The <br> tag requires a closing tag. 
+4. What's the difference between <code> and <pre>? 
+5. Which tag would you use to show a keyboard shortcut like Ctrl+S?    a) <samp>   b) <kbd>   c) 
+<code>   d) <sub> 
+6. Which list type uses <dt> and <dd>?    a) Ordered list   b) Unordered list   c) Definition list   d) 
+Nested list 
+7. Fill in the blank: an ordered list is created with the ____ tag. 
+8. True or False: you can nest a <ul> inside a single <li> of another list. 
+9. Which heading level should normally appear only once per page?    a) <h6>   b) <h3>   c) <h1>   
+d) <h4> 
+10. Why should tables only be used for tabular data, not page layout? 
+11. What does "semantic markup" mean?    a) Using tags purely for visual styling   b) Choosing tags 
+that describe the meaning of the content, not just its appearance   c) Writing HTML in all 
+lowercase   d) Using only <div> tags 
+12. Which tag strikes through text to show it's been removed or is outdated?    a) <s>   b) <del>   c) 
+<u>   d) <mark> 
+CodeMe Academy Â· Learn. Build. Innovate.  â€”  Page 23 
+CodeMe Academy Â· WD101 
+CodeMe Academy Â· Learn. Build. Innovate.  â€”  Page 24 
+Module 2 Assignment: Crafting a Tech Blog Post 
+Scenario 
+You're a tech blogger writing about the importance of clean code. Your post will feature a quote on 
+coding practices, a code snippet, and your own thoughts â€” formatted for readability. 
+Instructions 
+1. Start with the basic HTML5 structure: doctype, html, head, and body tags. 
+2. Use <q> for a short inline quotation from a famous programmer, e.g. Martin Fowler's line about 
+writing code for humans, not just computers. 
+3. Use <blockquote> for a longer excerpt on clean coding principles, with a cite attribute 
+referencing the source. 
+4. Add a <cite> tag naming the book or article you're quoting from. 
+5. Wrap the blockquote's attribution in a <footer> tag. 
+6. Insert <br> tags where a line break improves readability. 
+7. Use <hr> to visually separate the quote section from the rest of the post. 
+8. Use <code> to display a short snippet inline, such as var x = 0; 
+9. Use <pre> to display a small block of clean, formatted code. 
+10. Include a <kbd> example (like Ctrl + S) and a <samp> example showing sample output. 
+Sample Solution 
+<!DOCTYPE html> 
+<html> 
+<head> 
+  <title>The Importance of Clean Code</title> 
+  <meta charset="UTF-8"> 
+</head> 
+<body> 
+  <h1>The Importance of Clean Code</h1> 
+  
+  <p><q>Any fool can write code that a computer can understand. Good programmers 
+  write code that humans can understand.</q> - Martin Fowler</p> 
+  
+  <p>As Robert C. Martin explains in his influential book:</p> 
+  <blockquote cite="Clean Code: A Handbook of Agile Software Craftsmanship"> 
+    <p>In the journey to becoming a better coder, one of the best practices is 
+    keeping your code clean and readable.</p> 
+    <footer>- Robert C. Martin, <cite>Clean Code: A Handbook of Agile Software 
+Craftsmanship</cite></footer> 
+  </blockquote> 
+  
+  <hr> 
+  
+  <p>Clean code isn't just a nice idea â€” it's a habit.<br> 
+  Every variable name, every function, is a small decision.</p> 
+  
+  <p>A bare declaration like <code>var x = 0;</code> says very little. Compare it 
+  to something clearer:</p> 
+  
+CodeMe Academy Â· WD101 
+<pre>let itemsInCart = 0; 
+function addItem() { 
+itemsInCart++; 
+}</pre> 
+<p>To save your file, press <kbd>Ctrl + S</kbd>. Forget a semicolon, and you might 
+see:</p> 
+<p><samp>SyntaxError: missing ; before statement</samp></p> 
+</body> 
+</html> 
+CodeMe Academy Â· Learn. Build. Innovate.  â€”  Page 25 CodeMe Academy 
+Learn.  Build.  Innovate. 
+WD101: Web Dev 101 â€” HTML 
+<truncated 71139 bytes>
+
+NOTE: The output was truncated because it was too long. Use a more targeted query or a smaller range to get the information you need.
