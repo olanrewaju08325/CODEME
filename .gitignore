@@ -22,4 +22,30 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-.env*
+.env
+!.env.example
+
+# Backend specific
+backend/.env
+
+# Frontend specific  
+frontend/.env
+
+# Supabase CLI local state
+supabase/.temp/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+.venv/
+venv/
+*.so
+
+# OS
+.DS_Store
+Thumbs.db
